@@ -2,6 +2,8 @@
 
 ThreatListPro publishes a free 200-entry sample of an IPv4/CIDR blocklist built from attacks observed on live production Palo Alto GlobalProtect VPN portals in the US. It is intended for testing External Dynamic List (EDL) and external threat-feed integrations; the commercial feed remains the full product. At the 2026-10-20 baseline, that feed covered 6,615,277 unique IPv4 addresses; CIDR coverage does not mean every covered address attacked.
 
+> **Rebuilt on 2026-10-20.** This repository replaces an earlier ThreatListPro repository of the same name; descriptions of that earlier version (for example "2M+ IPs" or "updated weekly") are out of date. Current scope: a free 200-entry IPv4/CIDR sample covering at most 500,000 addresses. The full feed is checked for new attackers every 6 hours, comes from attacks observed on live production Palo Alto GlobalProtect VPN portals in the US, and is IPv4 only.
+
 ## Files
 
 | Path | What it is |
@@ -38,6 +40,18 @@ The same 200 entries are served at `https://api.threatlistpro.com/v1/sample/bloc
 | Access | free, no signup | subscription, [threatlistpro.com](https://threatlistpro.com) |
 
 The sample is chosen deterministically, not rotated: it changes only when the start of the full feed changes, and each change is kept in this repository's history.
+
+## FAQ
+
+**What is an EDL?** An External Dynamic List is a plain-text list of IP addresses (or domains or URLs) that a firewall downloads from a URL on a schedule and uses in policy. Palo Alto Networks calls it an External Dynamic List; FortiGate calls it a threat feed (External Connector); pfSense and OPNsense use URL table aliases. See [docs/FORMAT.md](docs/FORMAT.md).
+
+**Is this a free EDL URL for Palo Alto?** Yes. Use the raw URL above as an IP-type External Dynamic List on PAN-OS (steps in [examples/panos.md](examples/panos.md)), or as an IP threat feed on FortiGate ([examples/fortios.md](examples/fortios.md)). No signup or API key.
+
+**Is this the full ThreatListPro feed?** No. It is 200 entries covering at most 500,000 addresses, taken from the full feed in feed order. The full feed covers 5.4M+ IPv4 addresses and needs a subscription.
+
+**How often does it change?** The full feed is checked for new attackers every 6 hours; this copy is synced daily and changes only when the start of the feed changes. Daily totals for the full feed are in [data/history/daily.csv](data/history/daily.csv).
+
+**Does it work on Sophos?** Partly. Sophos third-party threat feeds do not accept ranges or network addresses, so convert the /32 lines to bare addresses first; see [examples/sophos-firewall.md](examples/sophos-firewall.md).
 
 ## License
 
