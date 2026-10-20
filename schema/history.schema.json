@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/pcchiu2023/threatlistpro-blocklist/blob/main/schema/history.schema.json",
+  "title": "ThreatListPro daily feed totals (one row of data/history/daily.csv)",
+  "description": "Totals for the full ThreatListPro IPv4 feed, recorded once per UTC day. Counts only; the entries themselves are not published.",
+  "type": "object",
+  "properties": {
+    "date_utc": { "type": "string", "format": "date", "description": "UTC day of the snapshot" },
+    "taken_at_utc": { "type": "string", "format": "date-time", "description": "When the snapshot was recorded" },
+    "baseline": { "type": "boolean", "description": "true for the first snapshot, which has no previous list to compare with" },
+    "entries": { "type": "integer", "minimum": 0, "description": "Number of IPv4 addresses and IPv4 CIDR blocks in the full feed" },
+    "unique_ipv4_addresses": { "type": "integer", "minimum": 0, "description": "IPv4 addresses covered by all entries, overlapping ranges merged" },
+    "added": { "type": "integer", "minimum": 0, "description": "Entries present now but not in the previous snapshot" },
+    "removed": { "type": "integer", "minimum": 0, "description": "Entries in the previous snapshot but not present now" },
+    "net_change": { "type": "integer", "description": "added minus removed" },
+    "list_sha256": { "type": "string", "pattern": "^([0-9a-f]{64})?$", "description": "SHA-256 of the full feed's entries joined by LF, no trailing newline" }
+  },
+  "required": ["date_utc", "taken_at_utc", "baseline", "entries", "unique_ipv4_addresses", "added", "removed", "net_change", "list_sha256"]
+}

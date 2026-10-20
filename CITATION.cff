@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this data, please cite it as below."
+title: "ThreatListPro free IPv4 blocklist sample"
+type: dataset
+authors:
+  - family-names: Chiu
+    given-names: Phil
+    affiliation: ThreatListPro
+abstract: >-
+  A free 200-entry sample of an IPv4/CIDR blocklist built from attacks observed on live production
+  Palo Alto GlobalProtect VPN portals in the US, with daily totals for the full feed.
+repository-code: "https://github.com/pcchiu2023/threatlistpro-blocklist"
+url: "https://threatlistpro.com"
+license:
+  - CC-BY-4.0
+  - MIT
+keywords:
+  - ip blocklist
+  - external dynamic list
+  - edl
+  - threat feed
+  - vpn brute force
+  - globalprotect
+date-released: "2026-10-20"

@@ -1,0 +1,85 @@
+name: Refresh sample and daily totals
+
+on:
+  schedule:
+    - cron: "30 7 * * *"   # daily; the list snapshot is taken at the first 6-hourly check after 00:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download and validate
+        env:
+          UA: "threatlistpro-blocklist-action (+https://github.com/pcchiu2023/threatlistpro-blocklist)"
+        run: |
+          set -euo pipefail
+          curl -fsS -A "$UA" https://api.threatlistpro.com/v1/sample/blocklist.txt -o /tmp/sample.raw
+          curl -fsS -A "$UA" https://api.threatlistpro.com/v1/history.csv -o /tmp/daily.csv
+
+          # Sample: exactly 200 unique IPv4 addresses or IPv4 CIDRs, nothing else.
+          grep -v '^#' /tmp/sample.raw | sed '/^\s*$/d' > /tmp/entries.txt
+          n=$(wc -l < /tmp/entries.txt)
+          bad=$(grep -Evc '^([0-9]{1,3}\.){3}[0-9]{1,3}(/[0-9]{1,2})?$' /tmp/entries.txt || true)
+          dup=$(sort /tmp/entries.txt | uniq -d | wc -l)
+          if [ "$n" -ne 200 ] || [ "$bad" -ne 0 ] || [ "$dup" -ne 0 ]; then
+            echo "Sample failed validation: $n entries, $bad invalid, $dup duplicates"; exit 1
+          fi
+
+          # Daily totals: expected header and at least one row.
+          head -1 /tmp/daily.csv | grep -qx 'date_utc,taken_at_utc,baseline,entries,unique_ipv4_addresses,added,removed,net_change,list_sha256'
+          [ "$(wc -l < /tmp/daily.csv)" -ge 2 ]
+          awk -F, 'NR>1 && (NF!=9 || $1 !~ /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/){exit 1}' /tmp/daily.csv
+          # Never shrink the history: a short response means a partial read, not lost days.
+          [ "$(wc -l < /tmp/daily.csv)" -ge "$(wc -l < data/history/daily.csv)" ]
+
+          {
+            echo "# ThreatListPro free sample: 200 IPv4/CIDR entries, one per line."
+            echo "# Built from attacks observed on live production Palo Alto GlobalProtect VPN portals in the US."
+            echo "# IPv4 only. A CIDR range covers addresses that did not each attack. License: CC BY 4.0."
+            echo "# Source and docs: https://github.com/pcchiu2023/threatlistpro-blocklist"
+            cat /tmp/entries.txt
+          } > data/sample/blocklist.txt
+          cp /tmp/daily.csv data/history/daily.csv
+
+      - name: Update metadata and commit if anything changed
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- data/sample/blocklist.txt data/history/daily.csv; then
+            echo "No change"; exit 0
+          fi
+          last=$(tail -1 data/history/daily.csv)
+          jq -n \
+            --arg at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg sha "$(grep -v '^#' data/sample/blocklist.txt | sha256sum | cut -d' ' -f1)" \
+            --argjson feed_entries "$(echo "$last" | cut -d, -f4)" \
+            --arg snap_date "$(echo "$last" | cut -d, -f1)" \
+            --argjson snap_addresses "$(echo "$last" | cut -d, -f5)" \
+            '{
+              retrieved_at_utc: $at,
+              sample: {
+                file: "data/sample/blocklist.txt",
+                entries: 200,
+                entries_sha256: $sha,
+                selection: "200 entries taken in feed order, skipping any entry that would take the sample past 500,000 addresses (same as the public API sample)",
+                api_url: "https://api.threatlistpro.com/v1/sample/blocklist.txt",
+                license: "CC-BY-4.0"
+              },
+              full_feed: {
+                entries: $feed_entries,
+                unique_ipv4_addresses_at_last_snapshot: $snap_addresses,
+                last_snapshot_date_utc: $snap_date,
+                access: "commercial subscription, https://threatlistpro.com"
+              },
+              ip_version: 4
+            }' > data/sample/metadata.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git commit -m "Refresh sample and daily totals ($(date -u +%Y-%m-%d))"
+          git push
