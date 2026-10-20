@@ -33,7 +33,7 @@ The same 200 entries are served at `https://api.threatlistpro.com/v1/sample/bloc
 
 | | Sample (this repository) | Full feed |
 |---|---|---|
-| IPv4 addresses covered | at most 500,000 (467,360 on 2026-10-20) | 5.4M+ (6,615,277 at the 2026-10-20 baseline) |
+| IPv4 addresses covered | at most 500,000 (467,616 on 2026-10-20) | 5.4M+ (6,615,277 at the 2026-10-20 baseline) |
 | Entries | 200, taken from the full feed in feed order | 2,763 at the 2026-10-20 baseline |
 | Source | attacks on live production Palo Alto GlobalProtect VPN portals in the US | same |
 | Checked for new attackers | taken from the full feed, which is checked every 6 hours; copied here daily | every 6 hours |
