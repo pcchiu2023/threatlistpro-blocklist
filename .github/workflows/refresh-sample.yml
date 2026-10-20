@@ -46,6 +46,8 @@ jobs:
             cat /tmp/entries.txt
           } > data/sample/blocklist.txt
           cp /tmp/daily.csv data/history/daily.csv
+          # Old raw URL from the April 2026 repo, still linked from forum posts and pasted into firewalls.
+          cp data/sample/blocklist.txt threatlist-sample.txt
 
       - name: Update metadata and commit if anything changed
         run: |
@@ -80,6 +82,6 @@ jobs:
             }' > data/sample/metadata.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data
+          git add data threatlist-sample.txt
           git commit -m "Refresh sample and daily totals ($(date -u +%Y-%m-%d))"
           git push

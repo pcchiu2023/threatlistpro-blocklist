@@ -27,7 +27,7 @@ Raw URL for a firewall (plain text over HTTPS):
 https://raw.githubusercontent.com/pcchiu2023/threatlistpro-blocklist/main/data/sample/blocklist.txt
 ```
 
-The same 200 entries are served at `https://api.threatlistpro.com/v1/sample/blocklist.txt`. Test in a log-only or alert rule before you deny traffic; see [docs/LIMITATIONS.md](docs/LIMITATIONS.md).
+`threatlist-sample.txt` at the repository root is the same file, kept at the URL used by the earlier version of this repository. The same 200 entries are served at `https://api.threatlistpro.com/v1/sample/blocklist.txt`. Test in a log-only or alert rule before you deny traffic; see [docs/LIMITATIONS.md](docs/LIMITATIONS.md).
 
 ## The sample and the full feed
 
