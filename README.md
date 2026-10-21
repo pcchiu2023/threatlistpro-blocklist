@@ -51,7 +51,7 @@ The sample is chosen deterministically, not rotated: it changes only when the st
 
 **How often does it change?** The full feed is checked for new attackers every 6 hours; this copy is synced daily and changes only when the start of the feed changes. Daily totals for the full feed are in [data/history/daily.csv](data/history/daily.csv).
 
-**Does it work on Sophos?** Partly. Sophos third-party threat feeds do not accept ranges or network addresses, so convert the /32 lines to bare addresses first; see [examples/sophos-firewall.md](examples/sophos-firewall.md).
+**Does it work on Sophos?** Partly, with the Sophos-format URL (`/v1/sample/sophos.txt`, or `/v1/YOUR_API_KEY/sophos.txt` for subscribers), which lists bare IPv4 addresses. Sophos feeds do not accept ranges, so ranges larger than /22 are left out and the Sophos feed covers only a small share of the list; see [examples/sophos-firewall.md](examples/sophos-firewall.md).
 
 ## License
 
