@@ -1,9 +1,9 @@
 {
-  "retrieved_at_utc": "2026-10-24T12:07:32Z",
+  "retrieved_at_utc": "2026-10-25T12:40:10Z",
   "sample": {
     "file": "data/sample/blocklist.txt",
     "entries": 200,
-    "entries_sha256": "5e045405ae9caad2a477c72de9fe90e76545bee73e77984b35bfe5f057622190",
+    "entries_sha256": "8288b74844d055dc5f3f49b5271363e25c12cfd74c2715de98b1cd2c3c95490f",
     "selection": "200 entries taken in feed order, skipping any entry that would take the sample past 500,000 addresses (same as the public API sample)",
     "api_url": "https://api.threatlistpro.com/v1/sample/blocklist.txt",
     "license": "CC-BY-4.0"
@@ -11,7 +11,7 @@
   "full_feed": {
     "entries": 2763,
     "unique_ipv4_addresses_at_last_snapshot": 6615277,
-    "last_snapshot_date_utc": "2026-10-24",
+    "last_snapshot_date_utc": "2026-10-25",
     "access": "commercial subscription, https://threatlistpro.com"
   },
   "ip_version": 4
