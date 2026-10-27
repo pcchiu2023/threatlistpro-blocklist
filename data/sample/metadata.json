@@ -1,5 +1,5 @@
 {
-  "retrieved_at_utc": "2026-10-26T14:26:42Z",
+  "retrieved_at_utc": "2026-10-27T13:26:09Z",
   "sample": {
     "file": "data/sample/blocklist.txt",
     "entries": 200,
@@ -11,7 +11,7 @@
   "full_feed": {
     "entries": 2227,
     "unique_ipv4_addresses_at_last_snapshot": 6615533,
-    "last_snapshot_date_utc": "2026-10-26",
+    "last_snapshot_date_utc": "2026-10-27",
     "access": "commercial subscription, https://threatlistpro.com"
   },
   "ip_version": 4
